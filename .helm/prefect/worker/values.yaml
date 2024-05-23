@@ -1,0 +1,8 @@
+worker:
+  apiConfig: 'server'
+  serverApiConfig:
+    apiUrl: http://prefect-server:4200/api
+    uiUrl: http://localhost:4200
+  config:
+    workPool: local-pool
+    type: process

@@ -1,0 +1,43 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: playground-prefect
+requires:
+  - path: namespaces.yaml
+#   - path: secrets.yaml
+#   - path: configmaps.yaml
+build:
+  artifacts:
+    - image: playground-worker
+      context: ../prefect/worker
+      sync:
+          infer:
+          - '**/*'
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: playground-prefect-server
+        repo: https://prefecthq.github.io/prefect-helm
+        remoteChart: prefect-server
+        namespace: playground
+        upgradeOnChange: true
+        createNamespace: true
+      - name: playground-prefect-worker
+        repo: https://prefecthq.github.io/prefect-helm
+        remoteChart: prefect-worker
+        upgradeOnChange: true
+        createNamespace: true
+        namespace: playground
+        valuesFiles:
+          - ../.helm/prefect/worker/values.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_playground_prefect}}"
+          image.tag: "{{.IMAGE_TAG_playground_prefect}}@{{.IMAGE_DIGEST_playground_prefect}}"
+portForward:
+- resourceType: service
+  resourceName: prefect-server
+  namespace: playground
+  port: 4200
+  localPort: 4200

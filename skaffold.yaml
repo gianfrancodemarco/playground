@@ -1,0 +1,7 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+requires:
+  - path: .skaffold/namespaces.yaml
+  #- path: .skaffold/secrets.yaml
+  #- path: .skaffold/configmaps.yaml
+  - path: .skaffold/prefect.yaml
