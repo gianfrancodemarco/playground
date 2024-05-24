@@ -4,4 +4,4 @@ requires:
   - path: .skaffold/namespaces.yaml
   #- path: .skaffold/secrets.yaml
   #- path: .skaffold/configmaps.yaml
-  - path: .skaffold/prefect.yaml
+  - path: prefect/skaffold.yaml

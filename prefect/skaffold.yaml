@@ -3,13 +3,13 @@ kind: Config
 metadata:
   name: playground-prefect
 requires:
-  - path: namespaces.yaml
+  - path: ../.skaffold/namespaces.yaml
 #   - path: secrets.yaml
 #   - path: configmaps.yaml
 build:
   artifacts:
     - image: playground-worker
-      context: ../prefect/worker
+      context: worker/.docker
       sync:
           infer:
           - '**/*'
@@ -31,7 +31,7 @@ deploy:
         createNamespace: true
         namespace: playground
         valuesFiles:
-          - ../.helm/prefect/worker/values.yaml
+          - worker/.helm/values.yaml
         setValueTemplates:
           image.repository: "{{.IMAGE_REPO_playground_prefect}}"
           image.tag: "{{.IMAGE_TAG_playground_prefect}}@{{.IMAGE_DIGEST_playground_prefect}}"
