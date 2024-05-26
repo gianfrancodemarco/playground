@@ -1,30 +1,36 @@
 apiVersion: skaffold/v2beta29
 kind: Config
 metadata:
-  name: playground-prefect
+  name: prefect
 requires:
-  - path: ../.skaffold/namespaces.yaml
+  - path: ../../.skaffold/namespaces.yaml
 #   - path: secrets.yaml
 #   - path: configmaps.yaml
 build:
   artifacts:
-    - image: playground-worker
-      context: worker/.docker
+    - image: server
+      context: server/.docker
       sync:
-          infer:
-          - '**/*'
+        infer:
+          - '**/*.py'
+          - '**/*.yaml'
       docker:
         dockerfile: Dockerfile
 deploy:
   helm:
     releases:
-      - name: playground-prefect-server
+      - name: prefect-server
         repo: https://prefecthq.github.io/prefect-helm
         remoteChart: prefect-server
         namespace: playground
         upgradeOnChange: true
         createNamespace: true
-      - name: playground-prefect-worker
+        # valuesFiles:
+        #   - server/.helm/values.yaml
+        setValueTemplates:
+          server.image.repository: "{{.IMAGE_REPO_playground_server}}"
+          server.image.tag: "{{.IMAGE_TAG_playground_server}}@{{.IMAGE_DIGEST_playground_server}}"
+      - name: prefect-worker
         repo: https://prefecthq.github.io/prefect-helm
         remoteChart: prefect-worker
         upgradeOnChange: true
@@ -32,9 +38,9 @@ deploy:
         namespace: playground
         valuesFiles:
           - worker/.helm/values.yaml
-        setValueTemplates:
-          image.repository: "{{.IMAGE_REPO_playground_prefect}}"
-          image.tag: "{{.IMAGE_TAG_playground_prefect}}@{{.IMAGE_DIGEST_playground_prefect}}"
+        # setValueTemplates:
+        #   image.repository: "{{.IMAGE_REPO_playground_prefect}}"
+        #   image.tag: "{{.IMAGE_TAG_playground_prefect}}@{{.IMAGE_DIGEST_playground_prefect}}"
 portForward:
 - resourceType: service
   resourceName: prefect-server
