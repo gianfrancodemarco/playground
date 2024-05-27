@@ -33,3 +33,13 @@ deployments:
     timezone: UTC
     day_or: true
     active: true
+- name: create_tables
+  version:
+  tags: []
+  description: "Create tables in a PostgreSQL database."
+  entrypoint: /flows/test_postgresql_create_tables.py:create_tables
+  parameters: {}
+  work_pool:
+    name: local-pool
+    work_queue_name:
+    job_variables: {}

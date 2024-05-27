@@ -8,14 +8,22 @@ requires:
 #   - path: configmaps.yaml
 build:
   artifacts:
-    - image: server
-      context: server/.docker
+    - image: prefect-worker
+      context: worker/.docker
       sync:
         infer:
           - '**/*.py'
           - '**/*.yaml'
       docker:
         dockerfile: Dockerfile
+    # - image: prefect-server
+    #   context: server/.docker
+    #   sync:
+    #     infer:
+    #       - '**/*.py'
+    #       - '**/*.yaml'
+    #   docker:
+    #     dockerfile: Dockerfile
 deploy:
   helm:
     releases:
@@ -27,9 +35,9 @@ deploy:
         createNamespace: true
         # valuesFiles:
         #   - server/.helm/values.yaml
-        setValueTemplates:
-          server.image.repository: "{{.IMAGE_REPO_playground_server}}"
-          server.image.tag: "{{.IMAGE_TAG_playground_server}}@{{.IMAGE_DIGEST_playground_server}}"
+        # setValueTemplates:
+        #   server.image.repository: "{{.IMAGE_REPO_server}}"
+        #   server.image.tag: "{{.IMAGE_TAG_server}}@{{.IMAGE_DIGEST_server}}"
       - name: prefect-worker
         repo: https://prefecthq.github.io/prefect-helm
         remoteChart: prefect-worker
@@ -38,9 +46,9 @@ deploy:
         namespace: playground
         valuesFiles:
           - worker/.helm/values.yaml
-        # setValueTemplates:
-        #   image.repository: "{{.IMAGE_REPO_playground_prefect}}"
-        #   image.tag: "{{.IMAGE_TAG_playground_prefect}}@{{.IMAGE_DIGEST_playground_prefect}}"
+        setValueTemplates:
+          worker.image.repository: "{{.IMAGE_REPO_prefect_worker}}"
+          worker.image.prefectTag: "{{.IMAGE_TAG_prefect_worker}}@{{.IMAGE_DIGEST_prefect_worker}}"
 portForward:
 - resourceType: service
   resourceName: prefect-server

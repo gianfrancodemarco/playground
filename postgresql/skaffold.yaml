@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: postgresql
+requires:
+  - path: ../.skaffold/namespaces.yaml
+#   - path: secrets.yaml
+#   - path: configmaps.yaml
+deploy:
+  helm:
+    releases:
+      - name: postgresql
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/postgresql
+        namespace: playground
+        upgradeOnChange: true
+        createNamespace: true
+        valuesFiles:
+         - .helm/values.yaml
+portForward:
+- resourceType: service
+  resourceName: postgresql
+  namespace: playground
+  port: 5432
+  localPort: 5432

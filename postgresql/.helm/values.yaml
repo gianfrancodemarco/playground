@@ -1,0 +1,6 @@
+global:
+  postgresql:
+    auth:
+      username: "admin"
+      password: "password"
+      database: "postgres"
