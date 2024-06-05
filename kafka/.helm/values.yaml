@@ -1,8 +1,8 @@
 controller:
-  replicaCount: 1
+  replicaCount: 3
 sasl:
   client:
     users: 
       - admin
-    passwords: 
+    passwords:
       - password

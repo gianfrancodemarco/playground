@@ -1,0 +1,9 @@
+dagster-user-deployments:
+  enabled: true
+  deployments:
+    - name: "dagster-code"
+      image:
+        repository: "dagster-code"
+        tag: "latest"
+        pullPolicy: "Never"
+      port: 3030

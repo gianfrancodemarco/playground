@@ -4,7 +4,8 @@ requires:
   - path: .skaffold/namespaces.yaml
   #- path: .skaffold/secrets.yaml
   #- path: .skaffold/configmaps.yaml
-  - path: prefect/dev/skaffold.yaml
+  #- path: prefect/dev/skaffold.yaml
+  - path: dagster/skaffold.yaml
   #- path: kafka/skaffold.yaml
   #- path: kafka-ui/skaffold.yaml
-  - path: postgresql/skaffold.yaml
+  #- path: postgresql/skaffold.yaml

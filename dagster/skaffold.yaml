@@ -1,0 +1,37 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: dagster
+requires:
+  - path: ../.skaffold/namespaces.yaml
+#   - path: secrets.yaml
+#   - path: configmaps.yaml
+build:
+  artifacts:
+    - image: dagster-code
+      context: .
+      sync:
+        infer:
+          - '**/*.py'
+          - '**/*.yaml'
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: dagster
+        remoteChart: dagster/dagster
+        namespace: playground
+        upgradeOnChange: true
+        createNamespace: true
+        valuesFiles:
+          - .helm/values.yaml
+        setValueTemplates:
+          dagster-user-deployments.deployments[0].image.repository: "{{.IMAGE_REPO_dagster_code}}"
+          dagster-user-deployments.deployments[0].image.tag: "{{.IMAGE_TAG_dagster_code}}@{{.IMAGE_DIGEST_dagster_code}}"
+portForward:
+- resourceType: service
+  resourceName: dagster-dagster-webserver
+  namespace: playground
+  port: 80
+  localPort: 8080
